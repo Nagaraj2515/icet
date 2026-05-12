@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TG ICET 2025 - Quiz Simulator</title>
+<meta name="description" content="TG ICET 2025 Interactive Quiz Simulator with 200 MCQ Questions">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SELECTION SCREEN -->
+<div id="selection-screen" class="screen active">
+  <div class="start-container">
+    <div class="logo-glow"></div>
+    <div class="start-card">
+      <div class="badge">ICET 2025</div>
+      <h1>Select Quiz</h1>
+      <p class="subtitle">Choose which shift you want to attempt</p>
+      
+      <div class="quiz-options">
+        <button class="quiz-select-btn" onclick="selectQuiz('shift1')">
+          <div class="quiz-info">
+            <h3>Shift 1 - 9th June</h3>
+            <p>200 Questions &bull; 150 Mins</p>
+          </div>
+          <span class="btn-arrow">→</span>
+        </button>
+        
+        <button class="quiz-select-btn" onclick="selectQuiz('shift2')">
+          <div class="quiz-info">
+            <h3>Shift 2 - 8th June</h3>
+            <p>200 Questions &bull; 150 Mins</p>
+          </div>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div id="start-screen" class="screen">
+  <div class="start-container">
+    <div class="logo-glow"></div>
+    <div class="start-card">
+      <button class="back-btn" onclick="goBackToSelection()">← Back to Selection</button>
+      <div class="badge" id="selected-quiz-badge">ICET 2025</div>
+      <h1 id="selected-quiz-title">TG ICET 2025</h1>
+      <p class="subtitle" id="selected-quiz-subtitle">Loading...</p>
+      <div class="exam-info">
+        <div class="info-item"><span class="info-icon">📝</span><span class="info-label">Questions</span><span class="info-value">200</span></div>
+        <div class="info-item"><span class="info-icon">⏱️</span><span class="info-label">Duration</span><span class="info-value">150 min</span></div>
+        <div class="info-item"><span class="info-icon">🎯</span><span class="info-label">Total Marks</span><span class="info-value">200</span></div>
+        <div class="info-item"><span class="info-icon">📊</span><span class="info-label">Sections</span><span class="info-value">3</span></div>
+      </div>
+      <div class="sections-preview">
+        <div class="section-chip"><span>Analytical Ability</span><small>Q1-75</small></div>
+        <div class="section-chip"><span>Mathematical Ability</span><small>Q76-145</small></div>
+        <div class="section-chip"><span>Communication Ability</span><small>Q146-200</small></div>
+      </div>
+      <div class="instructions">
+        <h3>Instructions</h3>
+        <ul>
+          <li>Each question carries <strong>1 mark</strong>. No negative marking.</li>
+          <li>Select an option to see the correct answer immediately.</li>
+          <li>Use <kbd>←</kbd> <kbd>→</kbd> arrow keys to navigate.</li>
+          <li>Timer starts when you click <strong>Start Quiz</strong>.</li>
+        </ul>
+      </div>
+      <button id="start-btn" class="btn-start" onclick="startQuiz()" disabled>
+        <span class="btn-text">Start Quiz</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quiz-screen" class="screen">
+  <!-- Top Bar -->
+  <header id="quiz-header">
+    <div class="header-left">
+      <span class="header-title" id="quiz-header-title">TG ICET 2025</span>
+      <span class="header-sep">|</span>
+      <span id="section-name" class="section-label">Analytical Ability</span>
+    </div>
+    <div class="header-center">
+      <div id="timer" class="timer">
+        <span class="timer-icon">⏱️</span>
+        <span id="timer-display">150:00</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="score-display">
+        <span class="score-label">Score</span>
+        <span id="score-value" class="score-val">0/200</span>
+      </div>
+      <button id="end-btn" class="btn-end" onclick="endQuiz()">End Quiz</button>
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div id="progress-bar-container">
+    <div id="progress-bar"></div>
+    <span id="progress-text">1 / 200</span>
+  </div>
+
+  <!-- Question Area -->
+  <main id="question-area">
+    <div class="question-card">
+      <div class="question-header">
+        <span id="q-number" class="q-num">Q.1</span>
+        <span id="q-marks" class="q-marks">1 Mark</span>
+      </div>
+      <div id="q-images" class="q-images"></div>
+      <div id="options-container" class="options"></div>
+      <div id="answer-feedback" class="feedback hidden"></div>
+    </div>
+  </main>
+
+  <!-- Navigation -->
+  <footer id="quiz-footer">
+    <button id="prev-btn" class="btn-nav" onclick="prevQuestion()" disabled>
+      <span>←</span> Previous
+    </button>
+    <div id="q-navigator" class="q-nav">
+      <button class="btn-nav-sm" onclick="openNavigator()">📋 Navigator</button>
+    </div>
+    <button id="next-btn" class="btn-nav" onclick="nextQuestion()">
+      Next <span>→</span>
+    </button>
+  </footer>
+</div>
+
+<!-- NAVIGATOR MODAL -->
+<div id="navigator-modal" class="modal hidden">
+  <div class="modal-overlay" onclick="closeNavigator()"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Question Navigator</h2>
+      <button class="modal-close" onclick="closeNavigator()">✕</button>
+    </div>
+    <div class="modal-legend">
+      <span class="legend-item"><span class="dot dot-current"></span>Current</span>
+      <span class="legend-item"><span class="dot dot-correct"></span>Correct</span>
+      <span class="legend-item"><span class="dot dot-wrong"></span>Wrong</span>
+      <span class="legend-item"><span class="dot dot-unanswered"></span>Not Attempted</span>
+    </div>
+    <div id="nav-grid" class="nav-grid"></div>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="result-screen" class="screen">
+  <div class="result-container">
+    <div class="result-card">
+      <div class="result-emoji" id="result-emoji">🎯</div>
+      <h1>Quiz Completed!</h1>
+      <div class="result-score">
+        <div class="score-circle">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="54" class="score-bg"/>
+            <circle cx="60" cy="60" r="54" class="score-fill" id="score-circle"/>
+          </svg>
+          <div class="score-text">
+            <span id="final-score" class="big-score">0</span>
+            <span class="score-total">/200</span>
+          </div>
+        </div>
+      </div>
+      <div class="result-stats">
+        <div class="stat"><span class="stat-num" id="stat-correct">0</span><span class="stat-label">Correct</span></div>
+        <div class="stat"><span class="stat-num" id="stat-wrong">0</span><span class="stat-label">Wrong</span></div>
+        <div class="stat"><span class="stat-num" id="stat-skipped">0</span><span class="stat-label">Skipped</span></div>
+        <div class="stat"><span class="stat-num" id="stat-time">0:00</span><span class="stat-label">Time Used</span></div>
+      </div>
+      <div class="result-actions">
+        <button class="btn-start" onclick="reviewQuiz()">📖 Review Answers</button>
+        <button class="btn-restart" onclick="goToSelection()">🔄 Back to Main Menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
